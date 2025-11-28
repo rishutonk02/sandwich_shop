@@ -57,6 +57,8 @@ class _CartScreenState extends State<CartScreen> {
 
                       String sizeText =
                           sandwich.isFootlong ? 'Footlong' : 'Six-inch';
+                      String toastedText =
+                          sandwich.isToasted ? 'Toasted' : 'Untoasted'; // NEW
 
                       return ListTile(
                         leading: Image.asset(
@@ -71,7 +73,7 @@ class _CartScreenState extends State<CartScreen> {
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Text(
-                            '$sizeText on ${sandwich.breadType.name} bread'),
+                            '$sizeText on ${sandwich.breadType.name} bread ($toastedText)'),
                         trailing: Text('Qty: $quantity',
                             style: const TextStyle(fontSize: 16)),
                       );

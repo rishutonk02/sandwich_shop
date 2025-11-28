@@ -11,6 +11,7 @@ class Sandwich {
   final SandwichType type;
   final bool isFootlong;
   final BreadType breadType;
+  final bool isToasted;
   final String? id;
   final String? description;
   final bool available;
@@ -19,6 +20,7 @@ class Sandwich {
     required this.type,
     required this.isFootlong,
     required this.breadType,
+    this.isToasted = false,
     this.id,
     this.description,
     this.available = true,
@@ -43,24 +45,6 @@ class Sandwich {
     return 'assets/images/${typeString}_$sizeString.png';
   }
 
-  Sandwich copyWith({
-    SandwichType? type,
-    bool? isFootlong,
-    BreadType? breadType,
-    String? id,
-    String? description,
-    bool? available,
-  }) {
-    return Sandwich(
-      type: type ?? this.type,
-      isFootlong: isFootlong ?? this.isFootlong,
-      breadType: breadType ?? this.breadType,
-      id: id ?? this.id,
-      description: description ?? this.description,
-      available: available ?? this.available,
-    );
-  }
-
   factory Sandwich.fromJson(Map<String, dynamic> json,
       {bool isFootlong = true, BreadType breadType = BreadType.white}) {
     final String typeStr = (json['type'] as String? ?? 'veggieDelight');
@@ -78,17 +62,4 @@ class Sandwich {
       available: json['available'] as bool? ?? true,
     );
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Sandwich &&
-        other.type == type &&
-        other.isFootlong == isFootlong &&
-        other.breadType == breadType &&
-        other.id == id;
-  }
-
-  @override
-  int get hashCode => Object.hash(type, isFootlong, breadType, id);
 }
