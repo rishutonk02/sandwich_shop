@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart' show expect, group, test;
 import 'package:sandwich_shop/repositories/pricing_repository.dart';
 
 void main() {
