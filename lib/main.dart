@@ -1,51 +1,39 @@
 ﻿import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class OrderItemDisplay extends StatelessWidget {
+  final int quantity;
+  final String itemType;
+
+  const OrderItemDisplay(this.quantity, this.itemType, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}');
+  }
+}
+
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Sandwich Shop App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(
-        title: 'My Sandwich Shop',
-      ),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title),
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Welcome to my shop!',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Sandwich Counter')),
+        body: const Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              OrderItemDisplay(3, 'BLT'),
+              OrderItemDisplay(5, 'Club'),
+              OrderItemDisplay(2, 'Veggie'),
+            ],
+          ),
         ),
       ),
     );
