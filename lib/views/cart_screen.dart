@@ -35,9 +35,7 @@ class _CartScreenState extends State<CartScreen> {
     final String totalPrice = cart.totalPrice.toStringAsFixed(2);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Your Order Cart'),
-      ),
+      appBar: AppBar(title: const Text('Your Order Cart')),
       body: Column(
         children: [
           Expanded(
@@ -45,8 +43,10 @@ class _CartScreenState extends State<CartScreen> {
                 ? const Center(
                     child: Text(
                       'Your cart is empty',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   )
                 : ListView.builder(
@@ -55,10 +55,12 @@ class _CartScreenState extends State<CartScreen> {
                       final sandwich = cart.items.keys.elementAt(index);
                       final quantity = cart.items.values.elementAt(index);
 
-                      String sizeText =
-                          sandwich.isFootlong ? 'Footlong' : 'Six-inch';
-                      String toastedText =
-                          sandwich.isToasted ? 'Toasted' : 'Untoasted'; // NEW
+                      String sizeText = sandwich.isFootlong
+                          ? 'Footlong'
+                          : 'Six-inch';
+                      String toastedText = sandwich.isToasted
+                          ? 'Toasted'
+                          : 'Untoasted'; // NEW
 
                       return ListTile(
                         leading: Image.asset(
@@ -69,13 +71,17 @@ class _CartScreenState extends State<CartScreen> {
                           errorBuilder: (context, error, stackTrace) =>
                               const Icon(Icons.fastfood),
                         ),
-                        title: Text('${sandwich.name}',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
+                        title: Text(
+                          sandwich.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         subtitle: Text(
-                            '$sizeText on ${sandwich.breadType.name} bread ($toastedText)'),
-                        trailing: Text('Qty: $quantity',
-                            style: const TextStyle(fontSize: 16)),
+                          '$sizeText on ${sandwich.breadType.name} bread ($toastedText)',
+                        ),
+                        trailing: Text(
+                          'Qty: $quantity',
+                          style: const TextStyle(fontSize: 16),
+                        ),
                       );
                     },
                   ),
@@ -109,32 +115,43 @@ class _CartScreenState extends State<CartScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Total:',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                    Text('\$$totalPrice',
-                        style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold)),
+                    const Text(
+                      'Total:',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '\$$totalPrice',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton.icon(
-                    onPressed: cart.totalQuantity > 0
-                        ? () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text(
-                                      'Order Submitted! Notes: ${cart.orderNotes}')),
-                            );
-                          }
-                        : null,
-                    label: const Text('Place Order'),
-                    icon: const Icon(Icons.payment),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                    )),
+                  onPressed: cart.totalQuantity > 0
+                      ? () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Order Submitted! Notes: ${cart.orderNotes}',
+                              ),
+                            ),
+                          );
+                        }
+                      : null,
+                  label: const Text('Place Order'),
+                  icon: const Icon(Icons.payment),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
               ],
             ),
           ),

@@ -4,14 +4,9 @@ import 'package:sandwich_shop/repositories/pricing_repository.dart';
 class Cart {
   final Map<Sandwich, int> _items = {};
   final PricingRepository _pricingRepository = PricingRepository();
-  String _orderNotes = '';
+  String orderNotes = '';
 
   Map<Sandwich, int> get items => Map.unmodifiable(_items);
-
-  String get orderNotes => _orderNotes;
-  set orderNotes(String notes) {
-    _orderNotes = notes;
-  }
 
   void add(Sandwich sandwich, {int quantity = 1}) {
     _items.update(

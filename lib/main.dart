@@ -1,6 +1,4 @@
 ﻿import 'package:flutter/material.dart';
-// app_styles is imported by the canonical OrderScreen; keep main minimal
-// to avoid duplicate unused imports
 import 'package:sandwich_shop/models/sandwich.dart';
 import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/views/cart_screen.dart';
