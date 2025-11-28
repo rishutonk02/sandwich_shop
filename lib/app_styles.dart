@@ -11,4 +11,7 @@ const TextStyle normalText = TextStyle(
   fontSize: 16.0,
 );
 
-// TODO Implement this library.
+const TextStyle heading2 = TextStyle(
+  fontSize: 18.0,
+  fontWeight: FontWeight.w600,
+);
