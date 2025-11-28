@@ -16,6 +16,34 @@ class Cart {
     );
   }
 
+  /// Remove [quantity] of [sandwich] from the cart.
+  ///
+  /// If the sandwich is not present, returns false. If the quantity to
+  /// remove is greater than or equal to the existing quantity the item is
+  /// removed entirely and the method returns true. Otherwise the quantity is
+  /// decremented and returns true.
+  bool remove(Sandwich sandwich, {int quantity = 1}) {
+    if (!_items.containsKey(sandwich)) return false;
+
+    final current = _items[sandwich]!;
+    if (quantity >= current) {
+      _items.remove(sandwich);
+    } else {
+      _items[sandwich] = current - quantity;
+    }
+    return true;
+  }
+
+  /// Remove all instances of [sandwich] from the cart.
+  void removeAll(Sandwich sandwich) {
+    _items.remove(sandwich);
+  }
+
+  /// Clear the cart entirely.
+  void clear() {
+    _items.clear();
+  }
+
   double get totalPrice {
     double total = 0.0;
     _items.forEach((sandwich, quantity) {

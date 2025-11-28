@@ -123,7 +123,7 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ),
                     Text(
-                      '\$$totalPrice',
+                      '£$totalPrice',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,

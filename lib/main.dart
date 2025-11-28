@@ -62,7 +62,7 @@ class _OrderScreenState extends State<OrderScreen> {
       String sizeText = _isFootlong ? 'footlong' : 'six-inch';
       String toastedText = _isToasted ? 'toasted' : 'untoasted';
       String confirmationMessage =
-          'Added \$$_quantity $sizeText ${sandwich.name} sandwich(es) on ${_selectedBreadType.name} bread ($toastedText)';
+          'Added $_quantity $sizeText ${sandwich.name} sandwich(es) on ${_selectedBreadType.name} bread ($toastedText)';
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -280,7 +280,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     const SizedBox(height: 8),
                     Text('Total Items: ${_cart.totalQuantity} sandwich(es)'),
                     Text(
-                      'Total Price: \$$totalPrice',
+                      'Total Price: £$totalPrice',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],
