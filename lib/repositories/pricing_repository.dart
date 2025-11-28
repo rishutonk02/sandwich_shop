@@ -9,4 +9,10 @@ class PricingRepository {
     final double unitPrice = isFootlong ? footlongPrice : sixInchPrice;
     return quantity * unitPrice;
   }
+
+  static double calculatePrice(int qty, bool isFootlong,
+      {required int quantity, required bool isFootlong}) {
+    final double unitPrice = isFootlong ? footlongPrice : sixInchPrice;
+    return quantity * unitPrice;
+  }
 }

@@ -1,47 +1,43 @@
 import 'package:sandwich_shop/models/sandwich.dart';
-import 'package:sandwich_shop/repositories/pricing_repository.dart';
-
-class CartEntry {
-  final Sandwich sandwich;
-  int quantity;
-
-  CartEntry({required this.sandwich, required this.quantity});
-}
+import 'package:sandwich_shop/repositories/pricing_repository.dart'; // Import to use pricing logic
 
 class Cart {
-  final Map<Sandwich, CartEntry> _items = {};
-  String notes = '';
+  // Map to store Sandwich as key and its quantity as value
+  final Map<Sandwich, int> _items = {};
+  final PricingRepository _pricingRepository = PricingRepository();
 
-  List<CartEntry> get items => _items.values.toList();
+  Map<Sandwich, int> get items => Map.unmodifiable(_items);
 
+  // Add a sandwich to the cart or increase its quantity
   void add(Sandwich sandwich, {int quantity = 1}) {
-    if (_items.containsKey(sandwich)) {
-      _items[sandwich]!.quantity += quantity;
-    } else {
-      _items[sandwich] = CartEntry(sandwich: sandwich, quantity: quantity);
-    }
-  }
-
-  double calculatePrice(Sandwich sandwich, int quantity) {
-    return PricingRepository.calculatePrice(
-      quantity: quantity,
-      isFootlong: sandwich.isFootlong,
+    // Note: To correctly aggregate the same sandwich,
+    // you would typically need to implement equality (== and hashCode) on Sandwich.
+    // For this simple exercise, we'll treat two Sandwich objects as different,
+    // even if their properties are the same, unless you want to add this complexity.
+    // Since the prompt suggests an add(sandwich, quantity) signature,
+    // we'll simply add the new sandwich/quantity.
+    _items.update(
+      sandwich,
+      (existingQuantity) => existingQuantity + quantity,
+      ifAbsent: () => quantity,
     );
   }
 
-  int get totalQuantity {
-    return _items.values.fold(0, (sum, entry) => sum + entry.quantity);
-  }
-
+  // Calculate the total price of all items in the cart
   double get totalPrice {
     double total = 0.0;
-    for (final entry in _items.values) {
-      total += calculatePrice(entry.sandwich, entry.quantity);
-    }
+    _items.forEach((sandwich, quantity) {
+      // Pricing logic uses quantity and size (isFootlong)
+      total += _pricingRepository.calculatePrice(quantity, sandwich.isFootlong);
+    });
     return total;
   }
 
-  void updateNotes(String newNotes) {
-    notes = newNotes;
+  // Get the total number of distinct items (pairs of sandwich/quantity)
+  int get itemCount => _items.length;
+
+  // Get the total number of sandwiches (sum of all quantities)
+  int get totalQuantity {
+    return _items.values.fold(0, (sum, quantity) => sum + quantity);
   }
 }

@@ -1,0 +1,41 @@
+enum BreadType { white, wheat, wholemeal }
+
+enum SandwichType {
+  veggieDelight,
+  chickenTeriyaki,
+  tunaMelt,
+  meatballMarinara,
+}
+
+class Sandwich {
+  final SandwichType type;
+  final bool isFootlong;
+  final BreadType breadType;
+
+  Sandwich({
+    required this.type,
+    required this.isFootlong,
+    required this.breadType,
+  });
+
+  // Converts the enum value to a human-readable string.
+  String get name {
+    switch (type) {
+      case SandwichType.veggieDelight:
+        return 'Veggie Delight';
+      case SandwichType.chickenTeriyaki:
+        return 'Chicken Teriyaki';
+      case SandwichType.tunaMelt:
+        return 'Tuna Melt';
+      case SandwichType.meatballMarinara:
+        return 'Meatball Marinara';
+    }
+  }
+
+  // Constructs the asset path for the corresponding image.
+  String get image {
+    String typeString = type.name;
+    String sizeString = isFootlong ? 'footlong' : 'six_inch';
+    return 'assets/images/\${typeString}_\$sizeString.png';
+  }
+}
