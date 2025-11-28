@@ -7,10 +7,11 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const App());
+    await tester.pumpWidget(const App());
 
+    TestAsyncUtils.guardSync();
     expect(find.textContaining('footlong sandwich'), findsOneWidget);
     expect(find.textContaining('six-inch sandwich'), findsNothing);
-
     // Tap the size switch
     final sizeSwitch = find.byType(Switch).at(0);
     await tester.tap(sizeSwitch);
