@@ -1,7 +1,6 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:sandwich_shop/repositories/order_repository.dart';
 import 'app_styles.dart';
-import 'repositories/order_repository.dart';
-import 'repositories/pricing_repository.dart';
 
 enum BreadType { white, wheat, wholemeal }
 
@@ -33,9 +32,8 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  // Refactored: Initialise repositories (Exercise 4 includes Pricing)
+  // Refactored: Initialize OrderRepository
   late final OrderRepository _orderRepository;
-  final PricingRepository _pricingRepository = PricingRepository();
 
   final TextEditingController _notesController = TextEditingController();
 
@@ -122,11 +120,7 @@ class _OrderScreenState extends State<OrderScreen> {
       noteForDisplay = _notesController.text;
     }
 
-    // Exercise 4: Calculate total price
-    final double totalPrice = _pricingRepository.calculateTotalPrice(
-      quantity: _orderRepository.quantity,
-      isFootlong: _isFootlong,
-    );
+    // NOTE: Pricing calculation (Exercise 4) is omitted.
 
     return Scaffold(
       appBar: AppBar(
@@ -147,14 +141,7 @@ class _OrderScreenState extends State<OrderScreen> {
               orderNote: noteForDisplay,
             ),
 
-            // Exercise 4: Display Total Price
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: Text(
-                'Total Price: £${totalPrice.toStringAsFixed(2)}',
-                style: heading2,
-              ),
-            ),
+            // NOTE: Total Price display (Exercise 4) is omitted.
 
             const SizedBox(height: 20),
 
@@ -164,8 +151,7 @@ class _OrderScreenState extends State<OrderScreen> {
               children: [
                 const Text('six-inch', style: normalText),
                 Switch(
-                  key:
-                      const Key('sandwich_size_switch'), // Exercise 3 fix (Key)
+                  key: const Key('sandwich_size_switch'), // Exercise 3 fix
                   value: _isFootlong,
                   onChanged: _onSandwichTypeChanged,
                 ),
@@ -179,7 +165,7 @@ class _OrderScreenState extends State<OrderScreen> {
               children: [
                 const Text('untoasted', style: normalText),
                 Switch(
-                  key: const Key('toasted_switch'), // Exercise 3 fix (Key)
+                  key: const Key('toasted_switch'), // Exercise 3 fix
                   value: _isToasted,
                   onChanged: _onToastedChanged, // New handler
                 ),
@@ -247,7 +233,7 @@ class StyledButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ButtonStyle myButtonStyle = ElevatedButton.styleFrom(
+    final ButtonStyle myButtonStyle = ElevatedButton.styleFrom(
       backgroundColor: backgroundColor,
       foregroundColor: Colors.white,
       textStyle: normalText,
@@ -257,6 +243,7 @@ class StyledButton extends StatelessWidget {
       onPressed: onPressed,
       style: myButtonStyle,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon),
           const SizedBox(width: 8),
@@ -267,6 +254,8 @@ class StyledButton extends StatelessWidget {
   }
 }
 
+// Helper classes (StyledButton, OrderItemDisplay) remain unchanged
+// Order item display widget
 class OrderItemDisplay extends StatelessWidget {
   final int quantity;
   final String itemType;
@@ -283,10 +272,12 @@ class OrderItemDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String displayText =
-        '$quantity ${breadType.name} $itemType sandwich(es): ${'🥪' * quantity}';
+    final String emojis = List.generate(quantity, (_) => '🥪').join();
+    final String displayText =
+        '$quantity ${breadType.name} $itemType sandwich(es): $emojis';
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           displayText,
