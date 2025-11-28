@@ -2,9 +2,7 @@
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 import 'package:sandwich_shop/models/cart.dart';
-
-// Assuming StyledButton is defined somewhere else, likely in app_styles.dart
-// or as a separate widget. Since its code is not provided, we assume it's available.
+import 'package:sandwich_shop/views/cart_screen.dart';
 
 void main() {
   runApp(const App());
@@ -30,40 +28,32 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  // Instance of the new Cart model
   final Cart _cart = Cart();
-  final TextEditingController _notesController = TextEditingController();
 
-  // State variables for sandwich selection [cite: 189, 190, 191]
   SandwichType _selectedSandwichType = SandwichType.veggieDelight;
   bool _isFootlong = true;
   BreadType _selectedBreadType = BreadType.white;
   int _quantity = 1;
 
-  @override
-  void initState() {
-    super.initState();
-    _notesController.addListener(() {
+  void _navigateToCart() {
+    Navigator.of(context)
+        .push(
+      MaterialPageRoute(
+        builder: (context) => CartScreen(cart: _cart),
+      ),
+    )
+        .then((_) {
       setState(() {});
     });
   }
 
-  @override
-  void dispose() {
-    _notesController.dispose();
-    super.dispose();
-  }
-
   void _addToCart() {
     if (_quantity > 0) {
-      // Create the Sandwich model instance [cite: 206]
       final Sandwich sandwich = Sandwich(
         type: _selectedSandwichType,
         isFootlong: _isFootlong,
         breadType: _selectedBreadType,
       );
-
-      // Add to cart and trigger UI update [cite: 211, 212]
       setState(() {
         _cart.add(sandwich, quantity: _quantity);
       });
@@ -72,12 +62,10 @@ class _OrderScreenState extends State<OrderScreen> {
       String confirmationMessage =
           'Added \$$_quantity $sizeText ${sandwich.name} sandwich(es) on ${_selectedBreadType.name} bread';
 
-      // Exercise 1: Display confirmation using SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(confirmationMessage),
           duration: const Duration(seconds: 2),
-          // style is assumed to be available
           backgroundColor: Colors.green,
         ),
       );
@@ -100,7 +88,7 @@ class _OrderScreenState extends State<OrderScreen> {
           Sandwich(type: type, isFootlong: true, breadType: BreadType.white);
       DropdownMenuEntry<SandwichType> entry = DropdownMenuEntry<SandwichType>(
         value: type,
-        label: sandwich.name, // Uses the model's name getter [cite: 235]
+        label: sandwich.name,
       );
       entries.add(entry);
     }
@@ -125,7 +113,7 @@ class _OrderScreenState extends State<OrderScreen> {
       isFootlong: _isFootlong,
       breadType: _selectedBreadType,
     );
-    return sandwich.image; // Uses the model's image getter [cite: 259]
+    return sandwich.image;
   }
 
   void _onSandwichTypeChanged(SandwichType? value) {
@@ -173,30 +161,35 @@ class _OrderScreenState extends State<OrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Formatting price for display
     final String totalPrice = _cart.totalPrice.toStringAsFixed(2);
 
     return Scaffold(
       appBar: AppBar(
-        // Logo addition (C. Adding a simple logo to the app bar)
-        leading: const SizedBox(
+        leading: SizedBox(
           height: 100,
           child: Image.asset('assets/images/logo.png'),
         ),
         title: const Text(
           'Sandwich Counter',
-          // Assuming heading1 is a defined TextStyle [cite: 302]
-          // style: heading1,
         ),
+        actions: [
+          IconButton(
+            icon: Badge(
+              label: Text(_cart.totalQuantity.toString()),
+              isLabelVisible: _cart.totalQuantity > 0,
+              child: const Icon(Icons.shopping_cart),
+            ),
+            onPressed: _navigateToCart,
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
-          // Makes the content scrollable [cite: 388]
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Dynamic Image Display [cite: 312]
               SizedBox(
                 height: 300,
                 child: Image.asset(
@@ -206,70 +199,49 @@ class _OrderScreenState extends State<OrderScreen> {
                     return const Center(
                       child: Text(
                         'Image not found',
-                        // style: normalText,
                       ),
                     );
                   },
                 ),
               ),
               const SizedBox(height: 20),
-
-              // 1. Sandwich Type Dropdown [cite: 326]
               DropdownMenu<SandwichType>(
-                width: MediaQuery.of(context).size.width -
-                    32, // Adjusted to fit screen width (with padding)
+                width: MediaQuery.of(context).size.width - 32,
                 label: const Text('Sandwich Type'),
-                // textStyle: normalText,
                 initialSelection: _selectedSandwichType,
                 onSelected: _onSandwichTypeChanged,
                 dropdownMenuEntries: _buildSandwichTypeEntries(),
               ),
               const SizedBox(height: 20),
-
-              // 2. Size Switch [cite: 336]
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Six-inch', /* style: normalText */
-                  ),
+                  const Text('Six-inch'),
                   Switch(
                     value: _isFootlong,
                     onChanged: _onSizeChanged,
                   ),
-                  const Text(
-                    'Footlong', /* style: normalText */
-                  ),
+                  const Text('Footlong'),
                 ],
               ),
               const SizedBox(height: 20),
-
-              // 3. Bread Type Dropdown [cite: 346]
               DropdownMenu<BreadType>(
-                width: MediaQuery.of(context).size.width -
-                    32, // Adjusted to fit screen width (with padding)
+                width: MediaQuery.of(context).size.width - 32,
                 label: const Text('Bread Type'),
-                // textStyle: normalText,
                 initialSelection: _selectedBreadType,
                 onSelected: _onBreadTypeChanged,
                 dropdownMenuEntries: _buildBreadTypeEntries(),
               ),
               const SizedBox(height: 20),
-
-              // 4. Quantity Controls [cite: 355]
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Quantity:', /* style: normalText */
-                  ),
+                  const Text('Quantity:'),
                   IconButton(
                     onPressed: _getDecreaseCallback(),
                     icon: const Icon(Icons.remove),
                   ),
-                  Text(
-                    '$_quantity', /* style: heading2 */
-                  ),
+                  Text('$_quantity'),
                   IconButton(
                     onPressed: _increaseQuantity,
                     icon: const Icon(Icons.add),
@@ -277,8 +249,6 @@ class _OrderScreenState extends State<OrderScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-
-              // Exercise 2: Permanent Cart Summary Display
               Container(
                 padding: const EdgeInsets.all(12.0),
                 decoration: BoxDecoration(
@@ -290,25 +260,21 @@ class _OrderScreenState extends State<OrderScreen> {
                   children: [
                     const Text(
                       '🛒 Cart Summary',
-                      // style: heading2,
                       textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Total Items: ${_cart.totalQuantity} sandwich(es)',
-                      // style: normalText,
                     ),
                     Text(
                       'Total Price: \$$totalPrice',
-                      // style: heading2,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 20),
-
-              // 5. Add to Cart Button [cite: 371]
-              // Assuming StyledButton is a custom widget
               StyledButton(
                 onPressed: _getAddToCartCallback(),
                 icon: Icons.add_shopping_cart,
@@ -319,6 +285,36 @@ class _OrderScreenState extends State<OrderScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class StyledButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final IconData icon;
+  final String label;
+  final Color backgroundColor;
+
+  const StyledButton({
+    required this.onPressed,
+    required this.icon,
+    required this.label,
+    required this.backgroundColor,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        backgroundColor: backgroundColor,
+        foregroundColor: Colors.white,
+        textStyle: const TextStyle(fontSize: 18),
       ),
     );
   }

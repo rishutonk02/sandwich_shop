@@ -258,7 +258,7 @@ class _OrderScreenState extends State<OrderScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  'Cart: ${_cart.totalItems} item(s) • £${_cart.totalPrice.toStringAsFixed(2)}',
+                  'Cart: ${_cart.itemCount} item(s) • £${_cart.totalPrice.toStringAsFixed(2)}',
                   style: heading2,
                   textAlign: TextAlign.center,
                 ),

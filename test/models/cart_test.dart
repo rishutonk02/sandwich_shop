@@ -38,13 +38,18 @@ void main() {
       final cart = Cart();
       cart.add(sixInchVeggie, quantity: 1);
       cart.add(sixInchVeggie, quantity: 2); // Should update the quantity
-
-      // Due to the simple Map key, this may result in 1 item with quantity 3
-      // IF Sandwich implements == and hashCode. Without it, it's 2 distinct entries.
-      // Based on the provided Cart code, it will merge them if the object identity is the same.
-      // Assuming for now that the object is added, and the simple Map is used:
-      expect(cart.itemCount, 1); // 1 key
-      expect(cart.items[sixInchVeggie], 3); // Quantity is 3
+      // With the list-backed Cart implementation we expect a single CartEntry
+      // merged by sandwich properties and quantity summed to 3.
+      expect(cart.itemCount, 1);
+      // cart.items is a Map<Sandwich,int> in this implementation
+      final matchingEntry = cart.items.entries.firstWhere(
+        (entry) =>
+            entry.key.type == sixInchVeggie.type &&
+            entry.key.isFootlong == sixInchVeggie.isFootlong &&
+            entry.key.breadType == sixInchVeggie.breadType,
+        orElse: () => throw StateError('Expected matching cart entry'),
+      );
+      expect(matchingEntry.value, 3);
     });
 
     test('Adding different items works correctly and calculates total price',
@@ -52,7 +57,6 @@ void main() {
       final cart = Cart();
       cart.add(sixInchVeggie, quantity: 1);
       cart.add(footlongTuna, quantity: 1);
-
       expect(cart.itemCount, 2);
       expect(cart.totalQuantity, 2);
       // Total price should be sum of 1 six-inch + 1 footlong price
